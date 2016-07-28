@@ -96,13 +96,16 @@ class S3Emitter(config: KinesisConnectorConfiguration, badSink: ISink, serialize
   client.setEndpoint(config.S3_ENDPOINT)
 
   val dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+  
+  // Added to include the file prefix for the S3 file
+  val filePrefixFormat = new SimpleDateFormat("yyyy/MM/dd/");
 
   /**
    * Determines the filename in S3, which is the corresponding
    * Kinesis sequence range of records in the file.
    */
   protected def getBaseFilename(firstSeq: String, lastSeq: String): String = {
-    dateFormat.format(Calendar.getInstance().getTime()) +
+    filePrefixFormat.format(Calendar.getInstance().getTime()) + dateFormat.format(Calendar.getInstance().getTime()) +
       "-" + firstSeq + "-" + lastSeq
   }
 
